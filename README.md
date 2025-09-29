@@ -25,13 +25,18 @@ ResNet-34: torchvision.models.resnet34(weights=None, num_classes=5) (residual ba
 - Device: otomatis cuda bila tersedia, selain itu cpu
 
 Cara Menjalankan 
+
 A). Google Colab
-    1. Upload IF25-4041-dataset.zip yang berisi train.csv dan folder train/.
-    2. Jalankan sel di awal skrip:
+1. Upload IF25-4041-dataset.zip yang berisi train.csv dan folder train/.
+2. Jalankan sel di awal skrip:
         "!unzip IF25-4041-dataset.zip"
+   
 B). Lokal (Python)
-    "pip install torch torchvision pandas matplotlib tqdm scikit-learn pillow"
-    "python per_6.py"
+
+- `pip install torch torchvision pandas matplotlib tqdm scikit-learn pillow`
+
+- `python per_6.py`
+
 
 Anggota Kelompok
 - Eden Wijaya - 122140187
