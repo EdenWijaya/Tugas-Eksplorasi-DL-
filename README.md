@@ -64,21 +64,11 @@ B) Lokal (Python)
    ```python
    python per_6.py
 
-### Struktur Direkomendasikan
-.
-├── per_6.py                 # Skrip utama (Plain-34, ResNet-34, modifikasi)
-├── train.csv                # Anotasi (filename,label)
-├── train/                   # Folder gambar
-├── Figure/
-│   └── compare_mods.png     # (opsional) kurva val acc
-├── main.tex                 # Laporan LaTeX (Overleaf)
-├── Referensi.bib            # (opsional) daftar pustaka
-└── README.md
 
-###Anggota Kelompok
+### Anggota Kelompok
 
 - Eden Wijaya — 122140187
 - Bayu Ega Ferdana — 122140129
 - Intan Permata Sari — 122140207
 
-###Eksperimen Arsitektur ResNet-34 — Deep Learning (IF25-40401)###
+### Eksperimen Arsitektur ResNet-34 — Deep Learning (IF25-40401) ###
