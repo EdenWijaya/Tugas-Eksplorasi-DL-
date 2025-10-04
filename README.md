@@ -58,9 +58,11 @@ Dataset: **makanan Indonesia – 5 kelas** (`train.csv` + folder `train/`).
 
 B) Lokal (Python)
 1. Instal dependensi:
-pip install torch torchvision pandas matplotlib tqdm scikit-learn pillow
-2. Jalankan:
-python per_6.py
+   ```python
+   !pip install torch torchvision pandas matplotlib tqdm scikit-learn pillow
+3. Jalankan:
+   ```python
+   python per_6.py
 
 ### Struktur Direkomendasikan
 .
