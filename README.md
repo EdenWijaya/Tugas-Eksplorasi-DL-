@@ -1,46 +1,82 @@
 # Benchmark Plain-34 vs ResNet-34 (IndonesianFood – 5 Kelas)
 
-Repositori ini membandingkan performa **Plain-34** (tanpa residual/skip connection, implementasi kustom) dan **ResNet-34** (implementasi `torchvision`) pada dataset makanan Indonesia dengan **5 kelas**. Kode diambil dari skrip `per_6.py` (format Colab-friendly) yang:
+Repositori ini membandingkan performa:
+- **Plain-34** (implementasi kustom, tanpa residual/skip connection), dan
+- **ResNet-34** (implementasi `torchvision`),
 
-- Membaca `train.csv` dan memuat gambar dari folder `train/`
-- Melatih **Plain-34** dan **ResNet-34**
-- Mencetak metrik tiap epoch (train/val loss & accuracy)
-- Menampilkan plot **perbandingan akurasi validasi** (Plain vs ResNet)
+serta dua **modifikasi Tahap 3** sesuai ketentuan tugas:
+- **(F)** Dropout pada kepala klasifikasi, dan
+- **(G)** penggantian optimizer ke **SGD + Nesterov**.
+
+Dataset: **makanan Indonesia – 5 kelas** (`train.csv` + folder `train/`).
 
 ---
 
-Konfigurasi Eksperimen
+## 🔧 Konfigurasi Eksperimen
 
-- Jumlah kelas: 5
-- Transformasi
-Train: Resize(224), RandomHorizontalFlip(0.5), RandomRotation(15), Normalize([0.485,0.456,0.406]/[0.229,0.224,0.225])
-Val : Resize(224), Normalize sama
-- Model
-Plain-34: PlainBlock + PlainNet([3,4,6,3]) (tanpa residual)
-ResNet-34: torchvision.models.resnet34(weights=None, num_classes=5) (residual bawaan)
-- Optimizer: Adam (lr=0.001)
-- Loss: CrossEntropyLoss
-- Batch size: 32
-- Epoch: 10
-- Device: otomatis cuda bila tersedia, selain itu cpu
+- **Jumlah kelas**: 5  
+- **Transformasi**
+  - Train: `Resize(224) → RandomHorizontalFlip(0.5) → RandomRotation(15) → ToTensor → Normalize([0.485,0.456,0.406],[0.229,0.224,0.225])`
+  - Val  : `Resize(224) → ToTensor → Normalize(sama)`
+- **Model**
+  - Plain-34: `PlainBlock` + `PlainNet([3,4,6,3])` *(tanpa residual)*  
+  - ResNet-34: `torchvision.models.resnet34(weights=None, num_classes=5)` *(residual bawaan)*
+- **Optimizer**
+  - Tahap 1–2 (baseline): **Adam** (`lr=1e-3`)
+  - Tahap 3F: ResNet-34 + **Dropout(p=0.5)** di kepala (optimizer **Adam**)
+  - Tahap 3G: ResNet-34 + **SGD+Nesterov** (`lr=1e-2`, `momentum=0.9`, `nesterov=True`)
+- **Loss**: `CrossEntropyLoss`  
+- **Batch size**: 32  
+- **Epoch**: 10  
+- **Device**: otomatis `cuda` bila tersedia, selain itu `cpu`
 
-Cara Menjalankan 
+---
 
-A). Google Colab
-1. Upload IF25-4041-dataset.zip yang berisi train.csv dan folder train/.
-2. Jalankan sel di awal skrip:
-        "!unzip IF25-4041-dataset.zip"
-   
-B). Lokal (Python)
+## 🧪 Hasil Utama (Val Acc Terbaik)
 
-- `pip install torch torchvision pandas matplotlib tqdm scikit-learn pillow`
+| Model                          | Val Acc Terbaik | Catatan                      |
+|-------------------------------|----------------:|------------------------------|
+| Plain-34                      | **0.5766**      | degradasi performa           |
+| ResNet-34 (Adam)              | **0.7387**      | residual learning            |
+| ResNet-34 + Dropout (F, Adam) | **0.6802**      | regularisasi kepala          |
+| ResNet-34 (SGD+Nesterov) (G)  | **0.7523**      | terbaik pada 10 epoch        |
 
-- `python per_6.py`
+**Ringkasan:** Residual connection meningkatkan performa vs Plain-34; Dropout belum mengungguli baseline pada horizon 10 epoch; SGD+Nesterov memberi puncak akurasi sedikit di atas Adam.
 
+> Opsional: simpan kurva akurasi validasi sebagai `Figure/compare_mods.png` untuk dimasukkan ke laporan.
 
-Anggota Kelompok
-- Eden Wijaya - 122140187
-- Bayu Ega Ferdana - 122140129
-- Intan Permata Sari - 122140207
+---
 
-Eksperimen Arsitektur ResNet-3
+## ▶️ Cara Menjalankan
+
+### A) Google Colab
+1. Upload `IF25-4041-dataset.zip` yang berisi `train.csv` dan folder `train/`.
+2. Di sel awal jalankan:
+   ```python
+   !unzip IF25-4041-dataset.zip
+3. Jalankan skrip per_6.py (Colab-friendly).
+
+B) Lokal (Python)
+1. Instal dependensi:
+pip install torch torchvision pandas matplotlib tqdm scikit-learn pillow
+2. Jalankan:
+python per_6.py
+
+### Struktur Direkomendasikan
+.
+├── per_6.py                 # Skrip utama (Plain-34, ResNet-34, modifikasi)
+├── train.csv                # Anotasi (filename,label)
+├── train/                   # Folder gambar
+├── Figure/
+│   └── compare_mods.png     # (opsional) kurva val acc
+├── main.tex                 # Laporan LaTeX (Overleaf)
+├── Referensi.bib            # (opsional) daftar pustaka
+└── README.md
+
+###Anggota Kelompok
+
+- Eden Wijaya — 122140187
+- Bayu Ega Ferdana — 122140129
+- Intan Permata Sari — 122140207
+
+###Eksperimen Arsitektur ResNet-34 — Deep Learning (IF25-40401)###
